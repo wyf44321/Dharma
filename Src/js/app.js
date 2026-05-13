@@ -37,6 +37,7 @@ const App = (() => {
     const toggle = document.getElementById('sidebar-toggle');
     const overlay = document.getElementById('sidebar-overlay');
     const sidebar = document.getElementById('sidebar');
+    const navTree = document.getElementById('nav-tree');
 
     toggle.addEventListener('click', () => {
       document.body.classList.toggle('sidebar-open');
@@ -46,8 +47,11 @@ const App = (() => {
       document.body.classList.remove('sidebar-open');
     });
 
-    const navTree = document.getElementById('nav-tree');
     sidebar.addEventListener('wheel', (e) => {
+      if (!navTree.contains(e.target)) {
+        e.preventDefault();
+        return;
+      }
       const atTop = navTree.scrollTop <= 0 && e.deltaY < 0;
       const atBottom = navTree.scrollTop + navTree.clientHeight >= navTree.scrollHeight && e.deltaY > 0;
       if (atTop || atBottom) {
@@ -55,8 +59,22 @@ const App = (() => {
       }
     }, { passive: false });
 
-    overlay.addEventListener('touchmove', (e) => {
-      e.preventDefault();
+    let touchStartY = 0;
+    sidebar.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    sidebar.addEventListener('touchmove', (e) => {
+      if (!navTree.contains(e.target)) {
+        e.preventDefault();
+        return;
+      }
+      const deltaY = touchStartY - e.touches[0].clientY;
+      const atTop = navTree.scrollTop <= 0 && deltaY < 0;
+      const atBottom = navTree.scrollTop + navTree.clientHeight >= navTree.scrollHeight && deltaY > 0;
+      if (atTop || atBottom) {
+        e.preventDefault();
+      }
     }, { passive: false });
   }
 

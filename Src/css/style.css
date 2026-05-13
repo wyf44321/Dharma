@@ -349,9 +349,7 @@ body {
   width: var(--sidebar-width);
   background: var(--color-sidebar-bg);
   border-right: 1px solid var(--color-border);
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
+  overflow: hidden;
   transform: translateX(-100%);
   transition: transform var(--transition-speed) ease;
   z-index: 150;
@@ -772,7 +770,6 @@ body.sidebar-open #content { margin-left: var(--sidebar-width); }
     position: fixed;
     box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
   }
-  body.sidebar-open { overflow: hidden; }
   body.sidebar-open #sidebar-overlay { display: block; }
   body.sidebar-open #content { margin-left: 0; }
   #content { padding: 20px 16px; }
