@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "启动 Doc Viewer",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/Src/server.js",
+      "args": ["--open"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "启动 Doc Viewer (不打开浏览器)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/Src/server.js",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

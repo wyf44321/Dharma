@@ -1,0 +1,13 @@
+{
+  "name": "dharma-doc-viewer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "佛教经典电子书合集 Markdown Documentation Viewer",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js --open"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
