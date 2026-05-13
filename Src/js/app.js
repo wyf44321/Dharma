@@ -93,27 +93,14 @@ const App = (() => {
       '</svg>';
     document.body.appendChild(btnTop);
 
-    const btnBottom = document.createElement('button');
-    btnBottom.id = 'scroll-to-bottom';
-    btnBottom.setAttribute('aria-label', '滑到底部');
-    btnBottom.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none">' +
-      '<path d="M10 16V4M5 11l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-      '</svg>';
-    document.body.appendChild(btnBottom);
-
     btnTop.addEventListener('click', () => _scrollToTop());
-    btnBottom.addEventListener('click', () => _scrollToBottom());
 
-    function updateButtons() {
-      const scrolled = window.scrollY > 300;
-      const nearBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 100);
-      btnTop.classList.toggle('visible', scrolled);
-      btnBottom.classList.toggle('visible', !nearBottom);
-      btnTop.classList.toggle('solo', nearBottom);
+    function updateButton() {
+      btnTop.classList.toggle('visible', window.scrollY > 300);
     }
 
-    window.addEventListener('scroll', updateButtons, { passive: true });
-    updateButtons();
+    window.addEventListener('scroll', updateButton, { passive: true });
+    updateButton();
   }
 
   function _getRouteKey(hash) {
@@ -316,10 +303,6 @@ const App = (() => {
   function _scrollToTop() {
     document.getElementById('content').scrollTo({ top: 0, behavior: 'instant' });
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }
-
-  function _scrollToBottom() {
-    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   }
 
   function _scrollToAnchor(anchor) {
