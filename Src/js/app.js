@@ -85,19 +85,35 @@ const App = (() => {
   }
 
   function _setupBackToTop() {
-    const btn = document.createElement('button');
-    btn.id = 'back-to-top';
-    btn.setAttribute('aria-label', '回到顶部');
-    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none">' +
+    const btnTop = document.createElement('button');
+    btnTop.id = 'back-to-top';
+    btnTop.setAttribute('aria-label', '回到顶部');
+    btnTop.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none">' +
       '<path d="M10 4v12M5 9l5-5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
       '</svg>';
-    document.body.appendChild(btn);
+    document.body.appendChild(btnTop);
 
-    btn.addEventListener('click', () => _scrollToTop());
+    const btnBottom = document.createElement('button');
+    btnBottom.id = 'scroll-to-bottom';
+    btnBottom.setAttribute('aria-label', '滑到底部');
+    btnBottom.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none">' +
+      '<path d="M10 16V4M5 11l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '</svg>';
+    document.body.appendChild(btnBottom);
 
-    window.addEventListener('scroll', () => {
-      btn.classList.toggle('visible', window.scrollY > 300);
-    }, { passive: true });
+    btnTop.addEventListener('click', () => _scrollToTop());
+    btnBottom.addEventListener('click', () => _scrollToBottom());
+
+    function updateButtons() {
+      const scrolled = window.scrollY > 300;
+      const nearBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 100);
+      btnTop.classList.toggle('visible', scrolled);
+      btnBottom.classList.toggle('visible', !nearBottom);
+      btnTop.classList.toggle('solo', nearBottom);
+    }
+
+    window.addEventListener('scroll', updateButtons, { passive: true });
+    updateButtons();
   }
 
   function _getRouteKey(hash) {
@@ -224,6 +240,7 @@ const App = (() => {
         basePath: basePath,
         route: docPath
       });
+      _renderPrevNext(docPath, container);
       _hideLoading();
       await DocRenderer.postRender(container);
     } catch (err) {
@@ -246,9 +263,63 @@ const App = (() => {
     if (el) el.classList.add('hidden');
   }
 
+  function _createPrevNextNav(prev, next, position) {
+    const nav = document.createElement('nav');
+    nav.className = 'doc-prev-next' + (position === 'top' ? ' doc-prev-next-top' : '');
+
+    if (prev) {
+      const a = document.createElement('a');
+      a.href = '#' + prev.path;
+      a.className = 'doc-prev-next-link prev';
+      a.innerHTML = '<span class="doc-prev-next-label">上一篇</span>' +
+        '<span class="doc-prev-next-title">' + _escHtml(prev.name) + '</span>';
+      a.addEventListener('click', () => App.setNavClick(true));
+      nav.appendChild(a);
+    } else {
+      nav.appendChild(document.createElement('span'));
+    }
+
+    if (next) {
+      const a = document.createElement('a');
+      a.href = '#' + next.path;
+      a.className = 'doc-prev-next-link next';
+      a.innerHTML = '<span class="doc-prev-next-label">下一篇</span>' +
+        '<span class="doc-prev-next-title">' + _escHtml(next.name) + '</span>';
+      a.addEventListener('click', () => App.setNavClick(true));
+      nav.appendChild(a);
+    } else {
+      nav.appendChild(document.createElement('span'));
+    }
+
+    return nav;
+  }
+
+  function _renderPrevNext(docPath, container) {
+    const files = Nav.getFlatFiles();
+    const idx = files.findIndex(f => f.path === docPath);
+    if (idx === -1) return;
+
+    const prev = idx > 0 ? files[idx - 1] : null;
+    const next = idx < files.length - 1 ? files[idx + 1] : null;
+    if (!prev && !next) return;
+
+    container.insertBefore(_createPrevNextNav(prev, next, 'top'), container.firstChild);
+    container.appendChild(_createPrevNextNav(prev, next, 'bottom'));
+  }
+
+  function _escHtml(str) {
+    const el = document.createElement('span');
+    el.textContent = str;
+    return el.innerHTML;
+  }
+
   function _scrollToTop() {
     document.getElementById('content').scrollTo({ top: 0, behavior: 'instant' });
     window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function _scrollToBottom() {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   }
 
   function _scrollToAnchor(anchor) {

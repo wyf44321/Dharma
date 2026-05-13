@@ -134,11 +134,24 @@ const Nav = (() => {
 
   function getTree() { return _tree; }
 
+  function _flattenFiles(nodes, out) {
+    for (const node of nodes) {
+      if (node.type === 'file') out.push({ name: node.name, path: node.path });
+      else if (node.children) _flattenFiles(node.children, out);
+    }
+  }
+
+  function getFlatFiles() {
+    const out = [];
+    _flattenFiles(_tree, out);
+    return out;
+  }
+
   function _esc(str) {
     const el = document.createElement('span');
     el.textContent = str;
     return el.innerHTML;
   }
 
-  return { init, highlight, clearHighlight, getTree };
+  return { init, highlight, clearHighlight, getTree, getFlatFiles };
 })();
