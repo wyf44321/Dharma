@@ -192,7 +192,7 @@ function openBrowser(url) {
 // --- Start server ---
 (async () => {
   const portArg = process.argv.find(a => a.startsWith('--port='));
-  const requestedPort = portArg ? parseInt(portArg.split('=')[1]) : 3000;
+  const requestedPort = portArg ? parseInt(portArg.split('=')[1]) : 3001;
   const port = await findAvailablePort(requestedPort);
 
   app.listen(port, () => {
