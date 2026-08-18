@@ -114,6 +114,7 @@ app.get('/api/search', (req, res) => {
     const contentMatches = [];
     const lines = content.split('\n');
     for (let i = 0; i < lines.length; i++) {
+      if (lines[i].startsWith('```')) continue;
       if (lines[i].toLowerCase().includes(lowerQuery)) {
         contentMatches.push({ line: i + 1, text: lines[i].trim().substring(0, 200) });
         if (contentMatches.length >= 5) break;

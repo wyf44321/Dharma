@@ -10,6 +10,10 @@ const DocRenderer = (() => {
       if (lang === 'mermaid') {
         return '<pre class="mermaid">' + _escapeHtml(code) + '</pre>';
       }
+      // 经文引文：按正文字体放大排版，不走语法高亮
+      if (lang === '经文' || lang === 'sutra') {
+        return '<pre class="sutra"><code>' + _escapeHtml(code) + '</code></pre>';
+      }
       let highlighted;
       if (lang && hljs.getLanguage(lang)) {
         try {

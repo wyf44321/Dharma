@@ -587,6 +587,20 @@ body.sidebar-open #content { margin-left: var(--sidebar-width); }
   tab-size: 4;
 }
 
+/* Scripture Blocks: ```经文 */
+#doc-content pre.sutra {
+  overflow-x: visible;
+}
+#doc-content pre.sutra code {
+  padding: 18px 20px;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  line-height: 1.95;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
 /* Mermaid */
 #doc-content pre.mermaid {
   background: transparent;
@@ -837,6 +851,7 @@ body.sidebar-open #content { margin-left: var(--sidebar-width); }
   #doc-content h2 { font-size: 1.3rem; }
   #doc-content h3 { font-size: 1.1rem; }
   #doc-content pre code { font-size: 0.82rem; }
+  #doc-content pre.sutra code { font-size: 1.02rem; padding: 14px 15px; }
   .doc-prev-next { gap: 10px; }
   .doc-prev-next-link { padding: 10px 12px; max-width: 50%; }
   .doc-prev-next-title { font-size: 0.88rem; }
